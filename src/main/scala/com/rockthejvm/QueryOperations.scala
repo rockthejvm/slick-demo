@@ -2,15 +2,18 @@ package com.rockthejvm
 
 import scala.concurrent.Future
 import slick.jdbc.GetResult
+
 import java.time.LocalDate
 
 object QueryOperations {
   val db = Connection.db
+
   import SlickTables.profile.api._
 
   def getActors: Future[Seq[Actor]] = {
     db.run(SlickTables.actorTable.result)
   }
+
   def findMovieByName(name: String): Future[Option[Movie]] = {
     db.run(SlickTables.movieTable.filter(_.name === name).result.headOption)
   }
@@ -64,14 +67,22 @@ object QueryOperations {
   }
 
   import SlickTables._
+
   def getActorsByMovie(movieId: Long): Future[Seq[Actor]] = {
-    val joinQuery = for {
-      res <- movieActorMappingTable
-        .filter(_.movieId === movieId)
-        .join(actorTable)
-        .on(_.actorId === _.id)
-    } yield res._2
-    db.run(joinQuery.result)
+
+    val joinQuery: Query[(SlickTables.MovieActorMappingTable, SlickTables.ActorTable), (MovieActorMapping, Actor), Seq] = movieActorMappingTable
+      .filter(_.movieId === movieId)
+      .join(actorTable)
+      .on(_.actorId === _.id)
+
+    db.run(joinQuery.map(_._2).result)
+  }
+
+  def saveWithTransaction(movie: Movie, actor: Actor): Future[Unit] = {
+    val saveMovieQuery = SlickTables.movieTable += movie
+    val saveActorQuery = SlickTables.actorTable += actor
+    val combinedQuery = DBIO.seq(saveMovieQuery, saveActorQuery)
+    db.run(combinedQuery.transactionally)
   }
 
 }

@@ -95,12 +95,12 @@ object DataSetup {
   val shawshankProperties = MovieProperties(0L, shawshank.id, shawshankMap)
 
   val actorDetailsShatner = {
-    val json = Json.parse(""" {"born": "Canada", "birthYear":1931, "middleName": "Alan"} """) 
+    val json = Json.parse(""" {"born": "Canada", "birthYear":1931, "middleName": "Alan"} """)
     ActorDetails(0L, shatner.id, json)
   }
 
   val actorDetailsNemoy = {
-    val json = Json.parse(""" {"born": "USA", "birthYear":1931, "middleName": "Simon"} """) 
+    val json = Json.parse(""" {"born": "USA", "birthYear":1931, "middleName": "Simon"} """)
     ActorDetails(0L, nemoy.id, json)
   }
 
