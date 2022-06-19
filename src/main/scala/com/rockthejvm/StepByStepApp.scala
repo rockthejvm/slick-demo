@@ -10,6 +10,7 @@ import FutureLogger._
 import MyExecContext._
 import scala.concurrent.Await
 import scala.concurrent.duration._
+
 object StepByStepApp extends App {
 
   import SlickTables.profile.api._
@@ -33,5 +34,10 @@ object StepByStepApp extends App {
     _ = println("all done.... ")
   } yield ()
 
-  Await.result(res, 5.seconds)
+  res.onComplete {
+    case Success(value) => println("**" * 10 + " App ran successfully " + "**" * 10)
+    case Failure(exception) => exception.printStackTrace()
+  }
+
+  Await.result(res, 10.seconds)
 }

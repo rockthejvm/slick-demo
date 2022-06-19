@@ -25,7 +25,7 @@ object QueryOperations {
   def getAllMoviesByPlainQuery: Future[Seq[Movie]] = {
     implicit val getResultMovie =
       GetResult(r => Movie(r.<<, r.<<, LocalDate.parse(r.nextString()), r.<<))
-    val moviesQuery = sql"""SELECT * FROM public."Movie" """.as[Movie]
+    val moviesQuery = sql"""SELECT * FROM movies."Movie" """.as[Movie]
     db.run(moviesQuery)
   }
 

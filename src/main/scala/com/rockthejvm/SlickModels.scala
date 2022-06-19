@@ -37,7 +37,7 @@ final case class ActorDetails(id: Long, actorId: Long, personalDetails: JsValue)
 class SlickTablesGeneric(val profile: PostgresProfile) {
   import profile.api._
 
-  class MovieTable(tag: Tag) extends Table[Movie](tag, "Movie") {
+  class MovieTable(tag: Tag) extends Table[Movie](tag, Some("movies"),"Movie") {
     def id = column[Long]("movie_id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     def releaseDate = column[LocalDate]("release_date")
@@ -46,7 +46,7 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
   }
   lazy val movieTable = TableQuery[MovieTable]
 
-  class ActorTable(tag: Tag) extends Table[Actor](tag, "Actor") {
+  class ActorTable(tag: Tag) extends Table[Actor](tag, Some("movies"), "Actor") {
     def id = column[Long]("actor_id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("name")
     override def * = (id, name) <> (Actor.tupled, Actor.unapply)
@@ -55,7 +55,7 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
   lazy val actorTable = TableQuery[ActorTable]
 
   class MovieActorMappingTable(tag: Tag)
-      extends Table[MovieActorMapping](tag, "MovieActorMapping") {
+      extends Table[MovieActorMapping](tag, Some("movies"), "MovieActorMapping") {
     def id = column[Long]("movie_actor_id", O.PrimaryKey, O.AutoInc)
     def movieId = column[Long]("movie_id")
     def actorId = column[Long]("actor_id")
@@ -65,7 +65,7 @@ class SlickTablesGeneric(val profile: PostgresProfile) {
   lazy val movieActorMappingTable = TableQuery[MovieActorMappingTable]
 
   class StreamingProviderMappingTable(tag: Tag)
-      extends Table[StreamingProviderMapping](tag, "StreamingProviderMapping") {
+      extends Table[StreamingProviderMapping](tag, Some("movies"), "StreamingProviderMapping") {
 
     implicit val providerMapper =
       MappedColumnType.base[StreamingProvider.StreamingProviders, String](
@@ -96,7 +96,7 @@ object SpecialTables {
   val api = CustomPostgresProfile.api
   import api._
 
-  class MovieLocationsTable(tag: Tag) extends Table[MovieLocations](tag, "MovieLocations") {
+  class MovieLocationsTable(tag: Tag) extends Table[MovieLocations](tag, Some("movies"), "MovieLocations") {
 
     def id = column[Long]("movie_location_id", O.PrimaryKey, O.AutoInc)
     def movieId = column[Long]("movie_id")
@@ -106,7 +106,7 @@ object SpecialTables {
   }
   lazy val movieLocationsTable = TableQuery[MovieLocationsTable]
 
-  class MoviePropertiesTable(tag: Tag) extends Table[MovieProperties](tag, "MovieProperties") {
+  class MoviePropertiesTable(tag: Tag) extends Table[MovieProperties](tag, Some("movies"), "MovieProperties") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc, O.SqlType("bigserial"))
     def movieId = column[Long]("movie_id")
@@ -115,7 +115,7 @@ object SpecialTables {
   }
   lazy val moviePropertiesTable = TableQuery[MoviePropertiesTable]
 
-  class ActorDetailsTable(tag: Tag) extends  Table[ActorDetails](tag, "ActorDetails") {
+  class ActorDetailsTable(tag: Tag) extends  Table[ActorDetails](tag, Some("movies"), "ActorDetails") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc, O.SqlType("bigserial"))
     def actorId = column[Long]("actor_id")

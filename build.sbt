@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
 //Slick Code Generation 
 slickCodegenSettings
 enablePlugins(CodegenPlugin)
-slickCodegenDatabaseUrl := "jdbc:postgresql://localhost:5432/movies"
+slickCodegenDatabaseUrl := "jdbc:postgresql://localhost:5432/postgres"
 slickCodegenDatabaseUser := "postgres"
 slickCodegenDatabasePassword := "admin"
 slickCodegenDriver := slick.jdbc.PostgresProfile
